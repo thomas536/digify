@@ -54,13 +54,12 @@ def text2num(spelled_num):
     >>> assert 1 == text2num("one")
     >>> assert 12 == text2num("twelve")
     >>> assert 72 == text2num("seventy-two")
-    >>> assert 300 == text2num("three hundred")
-    >>> assert 1200 == text2num("twelve hundred")
+    >>> assert 300 == text2num("Three hundred")
+    >>> assert 1200 == text2num("TWELVE HUNDRED")
     >>> assert 12304 == text2num("twelve thousand three hundred four")
-    >>> assert 6000000 == text2num("six million")
+    >>> assert 6000000 == text2num("six Million")
     >>> assert 6400005 == text2num("six million four hundred thousand five")
-    >>> assert 123456789012 == text2num("one hundred twenty three billion four "
-        "hundred fifty six million seven hundred eighty nine thousand twelve")
+    >>> assert 123456789012 == text2num('one hundred twenty three billion four hundred fifty six million seven hundred eighty nine thousand twelve')
     >>> assert 4E33 == text2num("four decillion")
     """
     words = re.split(r"[\s-]+", spelled_num.lower())
@@ -81,3 +80,6 @@ def text2num(spelled_num):
                 raise NumberException("Unknown number: %s" % w)
     return major + units
     
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
