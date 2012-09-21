@@ -90,6 +90,24 @@ def spelled_num_to_digits(spelled_num):
                 raise NumberException("Unknown number: %s" % w)
     return major + units
     
+    
+def replace_spelled_numbers(sentence):
+    """
+    >>> assert replace_spelled_numbers('There are TEN sponges') == 'There are 10 sponges'
+    >>> assert replace_spelled_numbers('I got ninety nine problems') == 'I got 99 problems'
+    >>> assert replace_spelled_numbers('He got two million, one hundred and eighty-two thousand, three hundred and two problems') == 'He got 2182302 problems'
+    >>> assert replace_spelled_numbers('I have five coconuts and two hundred and thirty-three carrots') == 'I have 5 coconuts and 233 carrots'
+    """
+    def try_spelled_num_to_digits(text):
+        try:
+            return spelled_num_to_digits(text)
+        except NumberError:
+            return text
+    return SPELLED_NUMBER_RE.sub(
+        lambda m: str(try_spelled_num_to_digits(m.group())), sentence)
+
+
+    
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
