@@ -32,37 +32,45 @@ SMALL = {
 }
 
 MAGNITUDE = {
-    'thousand':     1000,
-    'million':      1E6,
-    'billion':      1E9,
-    'trillion':     1E12,
-    'quadrillion':  1E15,
-    'quintillion':  1E18,
-    'sextillion':   1E21,
-    'septillion':   1E24,
-    'octillion':    1E27,
-    'nonillion':    1E30,
-    'decillion':    1E33,
+    'thousand': 1000,
+    'million': int(1E6),
+    'billion': int(1E9),
+    'trillion': int(1E12),
+    'quadrillion': int(1E15),
+    'quintillion': int(1E18),
+    'sextillion': int(1E21),
+    'septillion': int(1E24),
+    'octillion': int(1E27),
+    'nonillion': int(1E30),
+    'decillion': int(1E33),
 }
+
+_SINGLE_NUMBER_PTN = r'|'.join(re.escape(numword) 
+    for numword in SMALL.keys() + MAGNITUDE.keys() + ['hundred'])
+SPELLED_NUMBER_RE = re.compile(r'\b(?:%s)(?:(?:,?\s+|-|\s+and\s+)(?:%s))*\b' % (
+    _SINGLE_NUMBER_PTN, _SINGLE_NUMBER_PTN), re.IGNORECASE)
+
 
 class NumberException(Exception):
     def __init__(self, msg):
         Exception.__init__(self, msg)
 
-def text2num(spelled_num):
+def spelled_num_to_digits(spelled_num):
     """
-    >>> assert 1 == text2num("one")
-    >>> assert 12 == text2num("twelve")
-    >>> assert 72 == text2num("seventy-two")
-    >>> assert 300 == text2num("Three hundred")
-    >>> assert 1200 == text2num("TWELVE HUNDRED")
-    >>> assert 12304 == text2num("twelve thousand three hundred four")
-    >>> assert 6000000 == text2num("six Million")
-    >>> assert 6400005 == text2num("six million four hundred thousand five")
-    >>> assert 123456789012 == text2num('one hundred twenty three billion four hundred fifty six million seven hundred eighty nine thousand twelve')
-    >>> assert 4E33 == text2num("four decillion")
+    >>> assert 1 == spelled_num_to_digits("one")
+    >>> assert 12 == spelled_num_to_digits("twelve")
+    >>> assert 72 == spelled_num_to_digits("seventy-two")
+    >>> assert 300 == spelled_num_to_digits("Three hundred")
+    >>> assert 1200 == spelled_num_to_digits("TWELVE HUNDRED")
+    >>> assert 12304 == spelled_num_to_digits("twelve thousand three hundred four")
+    >>> assert 12506 == spelled_num_to_digits("twelve thousand, five hundred and six")
+    >>> assert 6000000 == spelled_num_to_digits("six Million")
+    >>> assert 6400005 == spelled_num_to_digits("six million four hundred thousand five")
+    >>> assert 123456789012 == spelled_num_to_digits(
+    ...   'one hundred twenty three billion, four hundred fifty six million, seven hundred eighty nine thousand twelve')
+    >>> assert 4E33 == spelled_num_to_digits("four decillion")
     """
-    words = re.split(r"[\s-]+", spelled_num.lower())
+    words = re.split(r",?\s+|-", spelled_num.lower())
     major = 0
     units = 0
     for w in words:
@@ -71,6 +79,8 @@ def text2num(spelled_num):
             units += x
         elif w == "hundred":
             units *= 100
+        elif w == "and":
+            continue
         else:
             x = MAGNITUDE.get(w, None)
             if x is not None:
