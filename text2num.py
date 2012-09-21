@@ -1,6 +1,6 @@
 import re
 
-Small = {
+SMALL = {
     'zero': 0,
     'one': 1,
     'two': 2,
@@ -31,51 +31,53 @@ Small = {
     'ninety': 90
 }
 
-Magnitude = {
+MAGNITUDE = {
     'thousand':     1000,
-    'million':      1000000,
-    'billion':      1000000000,
-    'trillion':     1000000000000,
-    'quadrillion':  1000000000000000,
-    'quintillion':  1000000000000000000,
-    'sextillion':   1000000000000000000000,
-    'septillion':   1000000000000000000000000,
-    'octillion':    1000000000000000000000000000,
-    'nonillion':    1000000000000000000000000000000,
-    'decillion':    1000000000000000000000000000000000,
+    'million':      1E6,
+    'billion':      1E9,
+    'trillion':     1E12,
+    'quadrillion':  1E15,
+    'quintillion':  1E18,
+    'sextillion':   1E21,
+    'septillion':   1E24,
+    'octillion':    1E27,
+    'nonillion':    1E30,
+    'decillion':    1E33,
 }
 
 class NumberException(Exception):
     def __init__(self, msg):
         Exception.__init__(self, msg)
 
-def text2num(s):
-    a = re.split(r"[\s-]+", s)
-    n = 0
-    g = 0
-    for w in a:
-        x = Small.get(w, None)
+def text2num(spelled_num):
+    """
+    >>> assert 1 == text2num("one")
+    >>> assert 12 == text2num("twelve")
+    >>> assert 72 == text2num("seventy-two")
+    >>> assert 300 == text2num("three hundred")
+    >>> assert 1200 == text2num("twelve hundred")
+    >>> assert 12304 == text2num("twelve thousand three hundred four")
+    >>> assert 6000000 == text2num("six million")
+    >>> assert 6400005 == text2num("six million four hundred thousand five")
+    >>> assert 123456789012 == text2num("one hundred twenty three billion four "
+        "hundred fifty six million seven hundred eighty nine thousand twelve")
+    >>> assert 4E33 == text2num("four decillion")
+    """
+    words = re.split(r"[\s-]+", spelled_num.lower())
+    major = 0
+    units = 0
+    for w in words:
+        x = SMALL.get(w, None)
         if x is not None:
-            g += x
+            units += x
         elif w == "hundred":
-            g *= 100
+            units *= 100
         else:
-            x = Magnitude.get(w, None)
+            x = MAGNITUDE.get(w, None)
             if x is not None:
-                n += g * x
-                g = 0
+                major += units * x
+                units = 0
             else:
-                raise NumberException("Unknown number: "+w)
-    return n + g
+                raise NumberException("Unknown number: %s" % w)
+    return major + units
     
-if __name__ == "__main__":
-    assert 1 == text2num("one")
-    assert 12 == text2num("twelve")
-    assert 72 == text2num("seventy two")
-    assert 300 == text2num("three hundred")
-    assert 1200 == text2num("twelve hundred")
-    assert 12304 == text2num("twelve thousand three hundred four")
-    assert 6000000 == text2num("six million")
-    assert 6400005 == text2num("six million four hundred thousand five")
-    assert 123456789012 == text2num("one hundred twenty three billion four hundred fifty six million seven hundred eighty nine thousand twelve")
-    assert 4000000000000000000000000000000000 == text2num("four decillion")
