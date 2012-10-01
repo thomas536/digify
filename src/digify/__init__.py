@@ -71,12 +71,13 @@ def spelled_num_to_digits(spelled_num):
     12304
     >>> spelled_num_to_digits("twelve thousand, five hundred and six")
     12506
-    >>> spelled_num_to_digits("six Million")
+    >>> spelled_num_to_digits("six   Million")
     6000000
     >>> spelled_num_to_digits("six million four hundred thousand five")
     6400005
     >>> spelled_num_to_digits(
-    ...   'one hundred twenty three billion, four hundred fifty six million, seven hundred eighty nine thousand twelve')
+    ...   'one hundred twenty three billion, four hundred fifty six million, '
+    ...   'seven hundred eighty nine thousand twelve')
     123456789012
     >>> spelled_num_to_digits("four decillion")
     4000000000000000000000000000000000L
@@ -108,9 +109,11 @@ def replace_spelled_numbers(sentence):
     'There are 10 sponges'
     >>> replace_spelled_numbers('I got ninety nine problems')
     'I got 99 problems'
-    >>> replace_spelled_numbers('He got two million, one hundred and eighty-two thousand, three hundred twenty five problems')
+    >>> replace_spelled_numbers('He got two million, one hundred and '
+    ...   'eighty-two thousand, three hundred twenty five problems')
     'He got 2182325 problems'
-    >>> replace_spelled_numbers('I have five coconuts and two hundred and thirty three carrots')
+    >>> replace_spelled_numbers('I have five coconuts and two hundred and '
+    ...   'thirty three carrots')
     'I have 5 coconuts and 233 carrots'
     """
     def try_spelled_num_to_digits(text):
