@@ -37,9 +37,9 @@ compulsory)
     >>> replace_spelled_numbers('I got ninety nine problems')
     'I got 99 problems'
     >>> replace_spelled_numbers('He got two million, one hundred and '
-    ...   'eighty-two thousand, three hundred twenty five problems')
+    ...   'eighty-two thousand, three hundred and twenty five problems')
     'He got 2182325 problems'
-    >>> replace_spelled_numbers('I have five coconuts and two hundred and '
+    >>> replace_spelled_numbers('I have five coconuts and two hundred '
     ...   'thirty three carrots')
     'I have 5 coconuts and 233 carrots'
 
