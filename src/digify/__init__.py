@@ -33,16 +33,16 @@ SMALL = {
 
 MAGNITUDE = {
     'thousand': 1000,
-    'million': int(1E6),
-    'billion': int(1E9),
-    'trillion': int(1E12),
-    'quadrillion': int(1E15),
-    'quintillion': int(1E18),
-    'sextillion': int(1E21),
-    'septillion': int(1E24),
-    'octillion': int(1E27),
-    'nonillion': int(1E30),
-    'decillion': int(1E33),
+    'million': 10 ** 6,  # 10E6 gives a float
+    'billion': 10 ** 9,
+    'trillion': 10 ** 12,
+    'quadrillion': 10 ** 15,
+    'quintillion': 10 ** 18,
+    'sextillion': 10 ** 21,
+    'septillion': 10 ** 24,
+    'octillion': 10 ** 27,
+    'nonillion': 10 ** 30,
+    'decillion': 10 ** 33,
 }
 
 _SINGLE_NUMBER_PTN = r'|'.join(re.escape(numword) 
@@ -57,18 +57,29 @@ class NumberException(Exception):
 
 def spelled_num_to_digits(spelled_num):
     """
-    >>> assert 1 == spelled_num_to_digits("one")
-    >>> assert 12 == spelled_num_to_digits("twelve")
-    >>> assert 72 == spelled_num_to_digits("seventy-two")
-    >>> assert 300 == spelled_num_to_digits("Three hundred")
-    >>> assert 1200 == spelled_num_to_digits("TWELVE HUNDRED")
-    >>> assert 12304 == spelled_num_to_digits("twelve thousand three hundred four")
-    >>> assert 12506 == spelled_num_to_digits("twelve thousand, five hundred and six")
-    >>> assert 6000000 == spelled_num_to_digits("six Million")
-    >>> assert 6400005 == spelled_num_to_digits("six million four hundred thousand five")
-    >>> assert 123456789012 == spelled_num_to_digits(
+    >>> spelled_num_to_digits("one")
+    1
+    >>> spelled_num_to_digits("twelve")
+    12
+    >>> spelled_num_to_digits("seventy-two")
+    72
+    >>> spelled_num_to_digits("Three hundred")
+    300
+    >>> spelled_num_to_digits("TWELVE HUNDRED")
+    1200
+    >>> spelled_num_to_digits("twelve thousand three hundred four")
+    12304
+    >>> spelled_num_to_digits("twelve thousand, five hundred and six")
+    12506
+    >>> spelled_num_to_digits("six Million")
+    6000000
+    >>> spelled_num_to_digits("six million four hundred thousand five")
+    6400005
+    >>> spelled_num_to_digits(
     ...   'one hundred twenty three billion, four hundred fifty six million, seven hundred eighty nine thousand twelve')
-    >>> assert 4E33 == spelled_num_to_digits("four decillion")
+    123456789012
+    >>> spelled_num_to_digits("four decillion")
+    4000000000000000000000000000000000L
     """
     words = re.split(r",?\s+|-", spelled_num.lower())
     major = 0
@@ -93,10 +104,14 @@ def spelled_num_to_digits(spelled_num):
     
 def replace_spelled_numbers(sentence):
     """
-    >>> assert replace_spelled_numbers('There are TEN sponges') == 'There are 10 sponges'
-    >>> assert replace_spelled_numbers('I got ninety nine problems') == 'I got 99 problems'
-    >>> assert replace_spelled_numbers('He got two million, one hundred and eighty-two thousand, three hundred and two problems') == 'He got 2182302 problems'
-    >>> assert replace_spelled_numbers('I have five coconuts and two hundred and thirty-three carrots') == 'I have 5 coconuts and 233 carrots'
+    >>> replace_spelled_numbers('There are TEN sponges')
+    'There are 10 sponges'
+    >>> replace_spelled_numbers('I got ninety nine problems')
+    'I got 99 problems'
+    >>> replace_spelled_numbers('He got two million, one hundred and eighty-two thousand, three hundred twenty five problems')
+    'He got 2182325 problems'
+    >>> replace_spelled_numbers('I have five coconuts and two hundred and thirty three carrots')
+    'I have 5 coconuts and 233 carrots'
     """
     def try_spelled_num_to_digits(text):
         try:
