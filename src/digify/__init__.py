@@ -46,7 +46,7 @@ MAGNITUDE = {
 }
 
 _SINGLE_NUMBER_PTN = r'|'.join(re.escape(numword) 
-    for numword in SMALL.keys() + MAGNITUDE.keys() + ['hundred'])
+    for numword in list(SMALL.keys()) + list(MAGNITUDE.keys()) + ['hundred'])
 SPELLED_NUMBER_RE = re.compile(r'\b(?:%s)(?:(?:,?\s+|-|\s+and\s+)(?:%s))*\b' % (
     _SINGLE_NUMBER_PTN, _SINGLE_NUMBER_PTN), re.IGNORECASE)
 
