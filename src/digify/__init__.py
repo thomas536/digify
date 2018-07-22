@@ -32,7 +32,7 @@ SMALL = {
 
     # ordinals
     'first': 1,
-    'second':2 ,
+    'second': 2,
     'third': 3,
     'fourth': 4,
     'fifth': 5,
@@ -74,7 +74,7 @@ MAGNITUDE = {
     'decillion': 10 ** 33,
 }
 
-_SINGLE_NUMBER_PTN = r'|'.join(re.escape(numword) 
+_SINGLE_NUMBER_PTN = r'|'.join(re.escape(numword)
     for numword in list(SMALL.keys()) + list(MAGNITUDE.keys()) + ['hundred'])
 SPELLED_NUMBER_RE = re.compile(r'\b(?:%s)(?:(?:,?\s+|-|\s+and\s+)(?:%s))*\b' % (
     _SINGLE_NUMBER_PTN, _SINGLE_NUMBER_PTN), re.IGNORECASE)
@@ -130,8 +130,8 @@ def spelled_num_to_digits(spelled_num):
             else:
                 raise NumberException("Unknown number: %s" % w)
     return major + units
-    
-    
+
+
 def replace_spelled_numbers(sentence):
     """
     >>> replace_spelled_numbers('There are TEN sponges')
@@ -154,7 +154,7 @@ def replace_spelled_numbers(sentence):
         lambda m: str(try_spelled_num_to_digits(m.group())), sentence)
 
 
-    
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
