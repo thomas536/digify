@@ -102,6 +102,8 @@ def spelled_num_to_digits(spelled_num):
     12506
     >>> spelled_num_to_digits("six   Million")
     6000000
+    >>> spelled_num_to_digits("250 million")
+    250000000
     >>> spelled_num_to_digits("six million four hundred thousand five")
     6400005
     >>> spelled_num_to_digits(
@@ -127,8 +129,21 @@ def spelled_num_to_digits(spelled_num):
             if x is not None:
                 major += units * x
                 units = 0
-            else:
-                raise NumberException("Unknown number: %s" % w)
+                continue
+
+            try:
+                units += int(w)
+                continue
+            except ValueError:
+                pass
+
+            try:
+                units += float(w)
+                continue
+            except ValueError:
+                pass
+
+            raise NumberException("Unknown number: %s" % w)
     return major + units
 
 
