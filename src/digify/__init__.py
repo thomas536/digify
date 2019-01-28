@@ -112,6 +112,8 @@ def spelled_num_to_digits(spelled_num):
     123456789012
     >>> spelled_num_to_digits("four decillion")
     4000000000000000000000000000000000L
+    >>> spelled_num_to_digits("4th")
+    4
     """
     words = re.split(r",?\s+|-", spelled_num.lower())
     major = 0
@@ -139,6 +141,13 @@ def spelled_num_to_digits(spelled_num):
 
             try:
                 units += float(w)
+                continue
+            except ValueError:
+                pass
+
+            try:
+                # strip off ordinal th, st, nd, rd
+                units += int(w.rstrip("dhnrst"))
                 continue
             except ValueError:
                 pass
