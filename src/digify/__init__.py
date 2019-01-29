@@ -145,12 +145,13 @@ def spelled_num_to_digits(spelled_num):
             except ValueError:
                 pass
 
-            try:
-                # strip off ordinal th, st, nd, rd
-                units += int(w.rstrip("dhnrst"))
-                continue
-            except ValueError:
-                pass
+            if w.endswith(("th", "st", "nd", "rd")):
+                try:
+                    # strip off ordinal th, st, nd, rd
+                    units += int(w[:-2])
+                    continue
+                except ValueError:
+                    pass
 
             raise NumberException("Unknown number: %s" % w)
     return major + units
