@@ -122,7 +122,7 @@ def spelled_num_to_digits(spelled_num):
     units = 0
     for w in words:
         if not w:
-          continue
+            continue
         x = SMALL.get(w, None)
         if x is not None:
             units += x
