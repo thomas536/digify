@@ -100,6 +100,8 @@ def spelled_num_to_digits(spelled_num):
     12304
     >>> spelled_num_to_digits("twelve thousand, five hundred and six")
     12506
+    >>> spelled_num_to_digits("twelve thousand,")
+    12000
     >>> spelled_num_to_digits("six   Million")
     6000000
     >>> spelled_num_to_digits("250 million")
@@ -115,10 +117,12 @@ def spelled_num_to_digits(spelled_num):
     >>> spelled_num_to_digits("4th")
     4
     """
-    words = re.split(r",?\s+|-", spelled_num.lower())
+    words = re.split(r",?\s+|-|,$", spelled_num.lower())
     major = 0
     units = 0
     for w in words:
+        if not w:
+          continue
         x = SMALL.get(w, None)
         if x is not None:
             units += x
