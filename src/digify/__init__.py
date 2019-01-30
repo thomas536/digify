@@ -116,6 +116,8 @@ def spelled_num_to_digits(spelled_num):
     4000000000000000000000000000000000L
     >>> spelled_num_to_digits("4th")
     4
+    >>> spelled_num_to_digits("4th,")
+    4
     """
     words = re.split(r",?\s+|-|,$", spelled_num.lower())
     major = 0
