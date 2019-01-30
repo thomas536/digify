@@ -173,7 +173,7 @@ def replace_spelled_numbers(sentence):
     def try_spelled_num_to_digits(text):
         try:
             return spelled_num_to_digits(text)
-        except NumberError:
+        except NumberException:
             return text
     return SPELLED_NUMBER_RE.sub(
         lambda m: str(try_spelled_num_to_digits(m.group())), sentence)
